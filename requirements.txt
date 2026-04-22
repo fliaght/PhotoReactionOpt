@@ -1,0 +1,19 @@
+# LAtelier — main app dependencies (install into `venv/`).
+#
+# The PDF Parser page uses Marker, which has its own dependency set
+# that would downgrade our `transformers`. Install Marker separately
+# into `venv_marker/` with `pip install marker-pdf`.
+
+# Mesop web framework
+mesop
+
+# Model inference (LLM Duel)
+torch
+torchvision
+transformers
+accelerate
+bitsandbytes
+librosa
+
+# PDF Parser (subprocess client → marker_single)
+requests

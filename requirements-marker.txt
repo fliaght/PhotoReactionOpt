@@ -1,0 +1,7 @@
+# LAtelier — PDF Parser backend dependencies (install into `venv_marker/`).
+#
+# Marker brings its own PyTorch + Surya models. We keep it in a
+# separate virtualenv so it doesn't downgrade the main venv's
+# transformers. The Mesop app calls it via the `marker_single` CLI.
+
+marker-pdf

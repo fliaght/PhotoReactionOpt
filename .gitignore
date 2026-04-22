@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# Virtualenvs
+venv/
+venv_marker/
+venv_mineru/
+
+# Environment / runtime
+.env
+.gradio/
+
+# Project-local artifacts not intended for the public repo
+archive/
+reports/
+CLAUDE.md
