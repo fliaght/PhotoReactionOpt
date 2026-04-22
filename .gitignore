@@ -18,4 +18,3 @@ venv_mineru/
 # Project-local artifacts not intended for the public repo
 archive/
 reports/
-CLAUDE.md

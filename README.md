@@ -42,12 +42,16 @@ pip install -r requirements.txt
 
 ### PDF Parser backend (`venv_marker/`) — optional
 
+Marker has its own PyTorch + Surya models and would otherwise downgrade the main venv's `transformers`. Keep it separate:
+
 ```bash
 python3 -m venv venv_marker
 source venv_marker/bin/activate
 pip install --upgrade pip
 pip install -r requirements-marker.txt
 ```
+
+Marker models auto-download into `~/.cache/` on first parse (several hundred MB).
 
 ---
 
@@ -57,7 +61,25 @@ pip install -r requirements-marker.txt
 ./restart_mesop.sh
 ```
 
-Open <http://localhost:7861>. Stop with `pkill -TERM -f "mesop app_mesop.py"`.
+The script:
+
+1. Kills any previous `mesop app_mesop.py` process (SIGTERM, then SIGKILL after 2 s).
+2. Polls `nvidia-smi` until VRAM is below 1 GB (a no-op on CPU-only boxes).
+3. Starts Mesop bound to `0.0.0.0:7861` with unbuffered stdout.
+
+Open <http://localhost:7861> (SSH-forward the port if running on a remote host).
+
+Stop cleanly with `pkill -TERM -f "mesop app_mesop.py"`. `SIGTERM`, `SIGINT`, and `atexit` handlers in `app_mesop.py` all call `engine.clear_gpu()` before the process dies, so no VRAM leaks between runs.
+
+### Smoke test
+
+1. Start the server.
+2. Open `http://localhost:7861` — you should land on the **LLM Duel** page (inherited from LAtelier).
+3. Click through the sidebar to **Settings**, **Performance**, **About** — all four pages should render without error.
+4. Click **📊 Performance**: the "System resources" card should show GPU usage (or "CUDA not available" on a CPU-only box). The task queue should be empty.
+5. (Optional) Trigger a task on any feature page; the floating status pill should update through queued → loading → done and the sidebar should grey out during the task and re-enable when it finishes.
+
+If any of the above breaks, the framework itself has regressed — check `CLAUDE.md` for the relevant gotcha before patching a page.
 
 ---
 
